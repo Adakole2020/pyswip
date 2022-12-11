@@ -1258,7 +1258,16 @@ PL_new_module.restype = module_t
 
 PL_is_initialised = _lib.PL_is_initialised
 
+intptr_t = c_long
+ssize_t = intptr_t
+wint_t = c_uint
 
+PL_thread_self = _lib.PL_thread_self
+PL_thread_self.restype = c_int
+
+PL_thread_attach_engine = _lib.PL_thread_attach_engine
+PL_thread_attach_engine.argtypes = [c_void_p]
+PL_thread_attach_engine.restype = c_int
 
 #typedef struct
 #{
