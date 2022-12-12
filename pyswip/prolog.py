@@ -23,7 +23,6 @@
 # SOFTWARE.
 
 
-from pyswip.easy import getTerm
 import sys
 
 from pyswip.core import *
@@ -48,11 +47,11 @@ def _initialize():
     args = []
     args.append("./")
     args.append("-q")         # --quiet
-    args.append("--nosignals")  # "Inhibit any signal handling by Prolog"
+    args.append("--nosignals") # "Inhibit any signal handling by Prolog"
     if SWI_HOME_DIR is not None:
         args.append("--home=%s" % SWI_HOME_DIR)
 
-    result = PL_initialise(len(args), args)
+    result = PL_initialise(len(args),args)
     # result is a boolean variable (i.e. 0 or 1) indicating whether the
     # initialisation was successful or not.
     if not result:
@@ -67,12 +66,11 @@ def _initialize():
                      "call(Goal))).", swipl_load)
     PL_call(swipl_load, None)
     PL_discard_foreign_frame(swipl_fid)
-
-
 _initialize()
 
 
 # NOTE: This import MUST be after _initialize is called!!
+from pyswip.easy import getTerm
 
 
 class Prolog:
@@ -97,16 +95,14 @@ class Prolog:
             swipl_goalCharList = swipl_args
             swipl_bindingList = swipl_args + 1
 
-            PL_put_chars(swipl_goalCharList, PL_STRING |
-                         REP_UTF8, -1, query.encode("utf-8"))
+            PL_put_chars(swipl_goalCharList, PL_STRING|REP_UTF8, -1, query.encode("utf-8"))
 
             swipl_predicate = PL_predicate("pyrun", 2, None)
 
-            plq = catcherrors and (
-                PL_Q_NODEBUG | PL_Q_CATCH_EXCEPTION) or PL_Q_NORMAL
+            plq = catcherrors and (PL_Q_NODEBUG|PL_Q_CATCH_EXCEPTION) or PL_Q_NORMAL
             swipl_qid = PL_open_query(None, plq, swipl_predicate, swipl_args)
 
-            Prolog._queryIsOpen = True  # From now on, the query will be considered open
+            Prolog._queryIsOpen = True # From now on, the query will be considered open
             try:
                 while maxresult and PL_next_solution(swipl_qid):
                     maxresult -= 1
@@ -130,40 +126,34 @@ class Prolog:
                     raise PrologError("".join(["Caused by: '", query, "'. ",
                                                "Returned: '", str(term), "'."]))
 
-            finally:  # This ensures that, whatever happens, we close the query
+            finally: # This ensures that, whatever happens, we close the query
                 PL_cut_query(swipl_qid)
                 PL_discard_foreign_frame(swipl_fid)
                 Prolog._queryIsOpen = False
 
     @classmethod
     def asserta(cls, assertion, catcherrors=False):
-        next(cls.query(assertion.join(
-            ["asserta((", "))."]), catcherrors=catcherrors))
+        next(cls.query(assertion.join(["asserta((", "))."]), catcherrors=catcherrors))
 
     @classmethod
     def assertz(cls, assertion, catcherrors=False):
-        next(cls.query(assertion.join(
-            ["assertz((", "))."]), catcherrors=catcherrors))
+        next(cls.query(assertion.join(["assertz((", "))."]), catcherrors=catcherrors))
 
     @classmethod
     def dynamic(cls, term, catcherrors=False):
-        next(cls.query(term.join(["dynamic((", "))."]),
-             catcherrors=catcherrors))
+        next(cls.query(term.join(["dynamic((", "))."]), catcherrors=catcherrors))
 
     @classmethod
     def retract(cls, term, catcherrors=False):
-        next(cls.query(term.join(["retract((", "))."]),
-             catcherrors=catcherrors))
+        next(cls.query(term.join(["retract((", "))."]), catcherrors=catcherrors))
 
     @classmethod
     def retractall(cls, term, catcherrors=False):
-        next(
-            cls.query(term.join(["retractall((", "))."]), catcherrors=catcherrors))
+        next(cls.query(term.join(["retractall((", "))."]), catcherrors=catcherrors))
 
     @classmethod
     def consult(cls, filename, catcherrors=False):
-        next(cls.query(filename.join(
-            ["consult('", "')"]), catcherrors=catcherrors))
+        next(cls.query(filename.join(["consult('", "')"]), catcherrors=catcherrors))
 
     @classmethod
     def query(cls, query, maxresult=-1, catcherrors=True, normalize=True):
@@ -182,3 +172,4 @@ class Prolog:
         [{'X': 'gina'}, {'X': 'john'}]
         """
         return cls._QueryWrapper()(query, maxresult, catcherrors, normalize)
+
