@@ -1042,6 +1042,34 @@ PL_cleanup.restype = c_int
 
 PL_unify_integer = _lib.PL_unify_integer
 PL_unify_atom_chars = _lib.PL_unify_atom_chars
+
+PL_unify_float = _lib.PL_unify_float
+PL_unify_float.argtypes = [term_t, c_double]
+PL_unify_float.restype = c_int
+
+PL_unify_bool = _lib.PL_unify_bool
+PL_unify_bool.argtypes = [term_t, c_int]
+PL_unify_bool.restype = c_int
+
+PL_unify_list = _lib.PL_unify_list
+PL_unify_list.argtypes = [term_t, term_t, term_t]
+PL_unify_list.restype = c_int
+
+PL_unify_nil = _lib.PL_unify_nil
+PL_unify_nil.argtypes = [term_t]
+PL_unify_nil.restype = c_int
+
+PL_unify_atom = _lib.PL_unify_atom
+PL_unify_atom.argtypes = [term_t, atom_t]
+PL_unify_atom.restype = c_int
+
+PL_unify_atom_chars = _lib.PL_unify_atom_chars
+PL_unify_atom_chars.argtypes = [term_t, c_char_p]
+PL_unify_atom_chars.restype = c_int
+
+PL_unify_string_chars = _lib.PL_unify_string_chars
+PL_unify_string_chars.argtypes = [term_t, c_char_p]
+PL_unify_string_chars.restype = c_void_p
 PL_unify = _lib.PL_unify
 PL_unify.restype = c_int
 
